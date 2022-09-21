@@ -6,3 +6,51 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Empresas {
+  id String @id @default(uuid()) //Gerar id automaticamente
+  nome String 
+  CNPJ String
+  telefone String
+  email String
+  endereco String
+  setores Setores[]
+  data_criacao DateTime  @default(now()) @db.Timestamptz(3)
+  data_atualizacao DateTime @updatedAt @db.Timestamptz(3)
+  data_exclusao DateTime?
+
+  @@map("empresas")
+}
+
+model Setores {
+  id String @id @default(uuid())
+  nome String
+  telefone String
+  email String
+  empresa Empresas @relation(fields: [id_empresa], references: [id])
+  id_empresa String
+  funcionarios Funcionarios[]
+  data_criacao DateTime  @default(now()) @db.Timestamptz(3)
+  data_atualizacao DateTime @updatedAt @db.Timestamptz(3)
+  data_exclusao DateTime?
+
+  @@map("setores")
+}
+
+model Funcionarios {
+  id String @id @default(uuid())
+  nome String
+  cpf String @unique
+  telefone String
+  email String @unique
+  endereco String
+  cargo String
+  salario String 
+  setor Setores @relation(fields: [id_setor], references: [id])
+  id_setor String
+  data_criacao DateTime  @default(now()) @db.Timestamptz(3)
+  data_atualizacao DateTime @updatedAt @db.Timestamptz(3)
+  data_exclusao DateTime?
+
+  @@map("funcionarios")
+}
