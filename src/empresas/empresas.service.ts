@@ -5,9 +5,7 @@ import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 
 @Injectable()
 export class EmpresasService {
-  constructor(readonly prismaService: PrismaService){
-
-  }
+  constructor(readonly prismaService: PrismaService){ }
 
   async create(data: CreateEmpresaDto) {
     const empresaExiste = await this.prismaService.empresas.findFirst({
