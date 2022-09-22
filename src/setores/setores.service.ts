@@ -1,26 +1,70 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/database/PrismaService';
 import { CreateSetoreDto } from './dto/create-setore.dto';
 import { UpdateSetoreDto } from './dto/update-setore.dto';
 
 @Injectable()
 export class SetoresService {
-  create(createSetoreDto: CreateSetoreDto) {
-    return 'This action adds a new setore';
+  constructor(readonly prismaService: PrismaService){ }
+
+
+  async create(data: CreateSetoreDto) {
+    const setorExiste = await this.prismaService.setores.findFirst({
+      where: {
+        nome: data.nome,
+      }
+    })
+
+    if(setorExiste){
+      throw new ConflictException('setor já está cadastrado!')
+    }
+
+    const setor = this.prismaService.setores.create({
+      data,
+    });
+
+    return setor;
   }
 
-  findAll() {
-    return `This action returns all setores`;
+  async findAll() {
+    const setores = await this.prismaService.setores.findMany();
+
+    return setores;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} setore`;
+ async findOne(id: string) {
+    const setor = await this.prismaService.setores.findFirst({ where: { id }});
+
+    if(!setor){
+      throw new ConflictException('Setor não está cadastrado!')
+    }
+
+    return setor;
+
   }
 
-  update(id: number, updateSetoreDto: UpdateSetoreDto) {
-    return `This action updates a #${id} setore`;
+  update(id: string, data: UpdateSetoreDto) {
+    const setor = this.findOne(id);
+
+    if(!setor){
+      throw new NotFoundException('Setor não encontrado no sistema');
+    }
+
+    return this.prismaService.setores.update({
+      data,
+      where: {
+        id
+      }
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} setore`;
+  remove(id: string) {
+    const setor = this.findOne(id);
+
+    if(!setor){
+      throw new NotFoundException('Setor não encontrada no sistema');
+    }
+
+    return this.prismaService.setores.delete({ where: {id}});
   }
 }
