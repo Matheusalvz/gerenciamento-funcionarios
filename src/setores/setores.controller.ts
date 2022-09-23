@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SetoresService } from './setores.service';
-import { CreateSetoreDto } from './dto/create-setore.dto';
-import { UpdateSetoreDto } from './dto/update-setore.dto';
+import { CreateSetoresDto } from './dto/create-setores.dto';
+import { UpdateSetoresDto } from './dto/update-setores.dto';
 
 @Controller('setores')
 export class SetoresController {
   constructor(private readonly setoresService: SetoresService) {}
 
   @Post()
-  create(@Body() createSetoreDto: CreateSetoreDto) {
+  create(@Body() createSetoreDto: CreateSetoresDto) {
     return this.setoresService.create(createSetoreDto);
   }
 
@@ -19,16 +19,16 @@ export class SetoresController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.setoresService.findOne(+id);
+    return this.setoresService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSetoreDto: UpdateSetoreDto) {
-    return this.setoresService.update(+id, updateSetoreDto);
+  update(@Param('id') id: string, @Body() updateSetoreDto: UpdateSetoresDto) {
+    return this.setoresService.update(id, updateSetoreDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.setoresService.remove(+id);
+    return this.setoresService.remove(id);
   }
 }

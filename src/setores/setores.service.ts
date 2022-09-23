@@ -1,14 +1,14 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/database/PrismaService';
-import { CreateSetoreDto } from './dto/create-setore.dto';
-import { UpdateSetoreDto } from './dto/update-setore.dto';
+import { CreateSetoresDto } from './dto/create-setores.dto';
+import { UpdateSetoresDto } from './dto/update-setores.dto';
 
 @Injectable()
 export class SetoresService {
   constructor(readonly prismaService: PrismaService){ }
 
 
-  async create(data: CreateSetoreDto) {
+  async create(data: CreateSetoresDto) {
     const setorExiste = await this.prismaService.setores.findFirst({
       where: {
         nome: data.nome,
@@ -43,7 +43,7 @@ export class SetoresService {
 
   }
 
-  update(id: string, data: UpdateSetoreDto) {
+  update(id: string, data: UpdateSetoresDto) {
     const setor = this.findOne(id);
 
     if(!setor){
